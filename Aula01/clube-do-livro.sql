@@ -28,7 +28,7 @@ CREATE TABLE tbArea (
 ) ENGINE = INNODB;
 
 CREATE TABLE tbLivro (
-	isbn_livro INT(13) NOT NULL,
+	isbn_livro CHAR(13) NOT NULL,
 	nome_livro VARCHAR(64) NOT NULL,
 	autor_livro VARCHAR(64) NOT NULL,
 	cod_area INT,
@@ -45,16 +45,17 @@ CREATE TABLE tbLivro (
 
 CREATE TABLE tbEmprestimo (
 	matr_aluno INT NOT NULL,
-	isbn_livro INT(13) NOT NULL,
-	data_emprestimo DATE NOT NULL,
-	data_devolucao_prevista DATE NOT NULL,
+	isbn_livro CHAR(13) NOT NULL,
+	data_emprestimo DATE,
+	data_devolucao_prevista DATE,
 	data_devolucao DATE,
 	
-	CONSTRAINT pk_tbemprestimo PRIMARY KEY (matr_aluno, isbn_livro, data_emprestimo),
+	CONSTRAINT pk_tbemprestimo PRIMARY KEY (matr_aluno, isbn_livro),
 	
-	CONSTRAINT pk_fk_tbaluno FOREIGN KEY (matr_aluno)
+	CONSTRAINT fk_tbemprestimo_tbaluno FOREIGN KEY (matr_aluno)
 	REFERENCES tbAluno(matr_aluno),
 	
-	CONSTRAINT pk_fk_tblivro FOREIGN KEY (isbn_livro)
+	CONSTRAINT fk_tbemprestimo_tblivro FOREIGN KEY (isbn_livro)
 	REFERENCES tbLivro(isbn_livro)
 ) ENGINE = INNODB;
+
