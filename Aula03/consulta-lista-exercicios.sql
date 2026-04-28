@@ -61,24 +61,72 @@ AND e.cod_filme = f.cod_filme;
 
 /* ---== Elabaror 3 consultas com funções agregadas com WHERE com 2 ou mais tabelas ==--- */
 
-/*Elaborar 1 consulta que envolva DISTINCT e WHERE com 2 ou mais tabelas*/
-/*Elaborar 1 consulta que envolva BETWEEN e WHERE com 2 ou mais tabelas*/
-/*Elaborar 3 consulta que envolva LIKE e WHERE com 2 ou mais tabelas*/
+/* 1: Consulta a quantidade de emprestimos de um cliente específico */
+SELECT c.nome_cliente, 
+COUNT(e.data_emprestimo) AS "Quantidade de Empréstimos"
+FROM tbcliente c, tbemprestimo e
+WHERE c.cod_cliente = e.cod_cliente
+AND c.cod_cliente = 20;
 
+/* 2: Consulta o total em multas de cada cliente */
+SELECT c.nome_cliente AS "Cliente", 
+SUM(e.valor_multa_emprestimo) AS "Total em multas"
+FROM tbcliente c, tbemprestimo e
+WHERE c.cod_cliente = e.cod_cliente
+GROUP BY c.nome_cliente;
 
+/* 3: Quantidades de títulos por filme */
+SELECT f.nome_filme AS "Nome do Filme", 
+COUNT(t.cod_titulo) AS "Quantidade de Títulos"
+FROM tbfilme f, tbtitulo t
+WHERE f.cod_titulo = t.cod_titulo
+GROUP BY f.nome_filme;
 
+/* ---== Elaborar 1 consulta que envolva DISTINCT e WHERE com 2 ou mais tabelas ==--- */
 
+/* Consulta clientes e filmes que eles emprestaram, sem repetir as mesmas correspondências caso existam */
+SELECT DISTINCT c.nome_cliente AS "Cliente", 
+f.nome_filme AS "Filme"
+FROM tbcliente c, tbfilme f, tbemprestimo e
+WHERE c.cod_cliente = e.cod_cliente
+AND f.cod_filme = e.cod_filme;
 
+/* ---== Elaborar 1 consulta que envolva BETWEEN e WHERE com 2 ou mais tabelas ==--- */
 
+/* Consulta pessoas de Curitiba que emprestaram em 2018 */
+SELECT c.nome_cliente AS "Cliente",
+c.cidade_cliente AS "Cidade",
+e.data_emprestimo AS "Data do Empréstimo"
+FROM tbcliente c, tbemprestimo e
+WHERE c.cod_cliente = e.cod_cliente
+AND c.cidade_cliente LIKE "Curitiba"
+AND e.data_emprestimo BETWEEN "2018-01-01" AND "2018-12-31";
 
+/* ---== Elaborar 3 consulta que envolva LIKE e WHERE com 2 ou mais tabelas ==--- */
 
+/* 1: Consulta filmes da categoria Comedia do período entre 2010 e 2020 */
+SELECT f.nome_filme AS "Filme",
+t.ano_titulo AS "Ano",
+c.nome_categoria AS "Categoria"
+FROM tbfilme f, tbtitulo t, tbcategoria c
+WHERE t.cod_titulo = f.cod_titulo
+AND t.cod_categoria = c.cod_categoria
+AND c.nome_categoria LIKE "Comedia"
+AND t.ano_titulo BETWEEN "2010-01-01" AND "2020-12-31";
 
+/* 2: Consulta todos os empréstimos de clientes começados em "J" */
+SELECT c.nome_cliente AS "Cliente",
+e.data_emprestimo AS "Data do Empréstimo"
+FROM tbcliente c, tbemprestimo e
+WHERE e.cod_cliente = c.cod_cliente
+AND c.nome_cliente LIKE "J%";
 
-
-
-
-
-
-
-
-
+/* 3: Consulta todos os empréstimos de clientes que contém "A" no nome e defilmes que terminam em "E" */
+SELECT c.nome_cliente AS "Cliente",
+f.nome_filme AS "Filme", 
+e.data_emprestimo AS "Data do Empréstimo"
+FROM tbcliente c, tbemprestimo e, tbfilme f
+WHERE e.cod_cliente = c.cod_cliente
+AND e.cod_filme = f.cod_filme
+AND c.nome_cliente LIKE "%A%"
+AND f.nome_filme LIKE "%E";
