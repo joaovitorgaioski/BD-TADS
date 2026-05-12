@@ -58,6 +58,7 @@ GROUP BY cidade_cliente
 HAVING uf_cliente LIKE "PR";
 
 /* ----=== EXERCÍCIOS INNER JOIN ===---- */
+
 /* 1. Exiba o nome_cliente e o valor da multa de todos os clientes que 
 tem o nome "ene" no seu nome */
 SELECT c.nome_cliente AS "Cliente com 'ene' no nome", 
@@ -82,6 +83,19 @@ WHERE c.nome_cliente LIKE "Jolene Morse";
 
 /* 4. Realize a média de multas de todas as pessoas que tem o nome iniciado 
 com a letra J */
+SELECT AVG(e.valor_multa_emprestimo) AS "Média das Multas",
+c.nome_cliente AS "Cliente"
+FROM tbcliente c
+INNER JOIN tbemprestimo e ON e.cod_cliente = c.cod_cliente
+GROUP BY c.nome_cliente
+HAVING c.nome_cliente LIKE "J%";
 
 /* 5. Exiba o valor da menor multa, maior multa, quantidade de multas, 
 somatório de multas e valor medio de multas em uma mesma consulta */
+
+SELECT MIN(valor_multa_emprestimo) AS "Menor Multa",
+MAX(valor_multa_emprestimo) AS "Maior Multa",
+COUNT(valor_multa_emprestimo) AS "Quantidade de Multas",
+SUM(valor_multa_emprestimo) AS "Somatório das Multas",
+AVG(valor_multa_emprestimo) AS "Valor Médio de Multas"
+FROM tbemprestimo;
